@@ -1,3 +1,22 @@
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import {getFirestore, collection, doc, addDoc, deleteDoc, updateDoc} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js"
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAr026N4ukx-8v01Ay1Sgr8sCKSGnalaJU",
+  authDomain: "boring-list-1df76.firebaseapp.com",
+  projectId: "boring-list-1df76",
+  storageBucket: "boring-list-1df76.firebasestorage.app",
+  messagingSenderId: "179447196596",
+  appId: "1:179447196596:web:a63cda0610a07d8884a0e1"
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 let listDisplay = document.getElementById('list');
 
 let list = [];
@@ -19,12 +38,13 @@ function update_display() {
 }
 
 
-function update_completion(index, isChecked) {
+window.update_completion = function(index, isChecked) {
     list[index].Completion = isChecked;
     update_display();
+    update_firestore_doc();
 }
 
-function edit_item(index) {
+window.edit_item = function(index) {
     let display_item = document.getElementById(`item${index}`);
     let inputField = display_item.parentElement.querySelector('input[type="text"]');
     inputField.focus();
@@ -35,22 +55,37 @@ function edit_item(index) {
     });
 }
 
-function change_item(index) {
+window.change_item = function(index) {
     let display_item = document.getElementById(`item${index}`);
     let inputField = display_item.parentElement.querySelector('input[type="text"]');
     list[index].label = inputField.value;
     update_display();
+    update_firestore_doc();
 }
 
-function delete_item(index) {
+window.delete_item = function(index) {
     list.splice(index, 1);
     update_display();
+    update_firestore_doc();
 }
 
-function add_task() {
+window.add_task = function() {
     let new_task = {label: "New task", Completion: false};
     list.push(new_task);
     update_display();
+    update_firestore_doc();
 }
 
 
+let checklistCollection = collection(db,"Checklists")
+let docRef;
+
+async function create_firestore_doc() {
+    docRef = await addDoc(checklistCollection,{list})
+}
+
+async function update_firestore_doc() {
+    await updateDoc(docRef, {list})
+}
+
+create_firestore_doc()
