@@ -1,7 +1,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import {getFirestore, collection, doc, addDoc, deleteDoc, updateDoc} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js"
+import {getFirestore, collection, doc, addDoc, deleteDoc, updateDoc, onSnapshot} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 // Your web app's Firebase configuration
@@ -82,10 +82,16 @@ let docRef;
 
 async function create_firestore_doc() {
     docRef = await addDoc(checklistCollection,{list})
+    onSnapshot(docRef, function (docSnap) {
+        list = docSnap.data().list
+        update_display();
+    })
 }
 
 async function update_firestore_doc() {
     await updateDoc(docRef, {list})
 }
+
+
 
 create_firestore_doc()
