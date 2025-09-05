@@ -79,6 +79,7 @@ window.add_task = function() {
 
 let checklistCollection = collection(db,"Checklists")
 let docRef;
+let id;
 
 async function create_firestore_doc() {
     docRef = await addDoc(checklistCollection,{list})
@@ -86,6 +87,9 @@ async function create_firestore_doc() {
         list = docSnap.data().list
         update_display();
     })
+    let url = new URL(window.location)
+    url.searchParams.set("id", docRef.id)
+    window.history.pushState({}, "", url)
 }
 
 async function update_firestore_doc() {
@@ -93,5 +97,19 @@ async function update_firestore_doc() {
 }
 
 
+function main() {
+    let params = new URLSearchParams(window.location.search)
+    id = params.get("id")
+    if (id) {
+        docRef = doc(checklistCollection, id)
+        onSnapshot(docRef, function (docSnap) {
+        list = docSnap.data().list
+        update_display();
+    })
+    }
+    else {
+        create_firestore_doc()
+    }
+}
 
-create_firestore_doc()
+main()
