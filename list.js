@@ -49,10 +49,12 @@ window.edit_item = function(index) {
     let inputField = display_item.parentElement.querySelector('input[type="text"]');
     inputField.focus();
     inputField.removeAttribute('readonly');
-    inputField.addEventListener('blur', function handler() {
-        inputField.setAttribute('readonly', true);
-        inputField.removeEventListener('blur', handler);
-    });
+    setTimeout(() => {
+        inputField.addEventListener('blur', function handler() {
+            inputField.setAttribute('readonly', true);
+            inputField.removeEventListener('blur', handler);
+        });
+    }, 50)
 }
 
 window.change_item = function(index) {
@@ -74,6 +76,9 @@ window.add_task = function() {
     list.push(new_task);
     update_display();
     update_firestore_doc();
+setTimeout(() => {
+        edit_item(list.length - 1);
+    }, 100);
 }
 
 
