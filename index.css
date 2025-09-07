@@ -82,13 +82,15 @@ input[type="text"]:focus {
 
 button {
     padding: 10px 15px;
+    height: 45px;
+    width: 130px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin: 0 auto;
-    margin-top: 50px;
+    margin-top: 70px;
 }
 
 button:hover {
