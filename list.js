@@ -86,8 +86,8 @@ let checklistCollection = collection(db,"Checklists")
 let docRef;
 let id;
 
-async function create_firestore_doc() {
-    docRef = await addDoc(checklistCollection,{list})
+async function create_firestore_doc(name, pass, salt) {
+    docRef = await addDoc(checklistCollection, {"name": name, "pass": pass, "salt": salt, "list": list})
     onSnapshot(docRef, function (docSnap) {
         list = docSnap.data().list
         update_display();
@@ -101,6 +101,54 @@ async function update_firestore_doc() {
     await updateDoc(docRef, {list})
 }
 
+async function hash(p) {
+  return Array.from(
+    new Uint8Array(
+      await crypto.subtle.digest("SHA-256", new TextEncoder().encode(p))
+    )
+  ).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function generateSalt(length = 16) {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+  return Array.from(array).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+
+function toggle_setup() {
+    let darkener = document.querySelector('.darkener');
+    let setup = document.getElementById('setup');
+    let setupButton = document.querySelector('.setup button');
+    darkener.style.display = (darkener.style.display === 'block') ? 'none' : 'block';
+    setup.style.display = (setup.style.display === 'block') ? 'none' : 'block';
+}
+
+function toggle_login() {
+    let darkener = document.querySelector('.darkener');
+    let login = document.getElementById('login');
+    darkener.style.display = (darkener.style.display === 'block') ? 'none' : 'block';
+    login.style.display = (login.style.display === 'block') ? 'none' : 'block';
+}
+
+window.setup = async function() {
+    let list_name = document.getElementById('list_name').value;
+    let list_pass = document.getElementById('list_pass').value;
+    if (!list_name) {
+        alert("Please enter a list name.");
+        return;
+    }
+    if (!list_pass) {
+        create_firestore_doc(list_name, "", "");
+    }
+    else{
+        let salt = generateSalt();
+        let hashed_pass = await hash(list_pass + salt);
+        create_firestore_doc(list_name, hashed_pass, salt);
+    }
+    toggle_setup();
+};
+
 
 function main() {
     let params = new URLSearchParams(window.location.search)
@@ -113,7 +161,7 @@ function main() {
     })
     }
     else {
-        create_firestore_doc()
+        toggle_setup();
     }
 }
 

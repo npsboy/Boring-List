@@ -17,6 +17,22 @@
         <button id="addTaskButton" onclick="add_task()">Add Task</button>
     </div>
 
+    <div class="darkener">
+        <div class="card" id="setup">
+            <input type="text" id="list_name" placeholder="My List Name">
+            <p>Password:</p>
+            <input type="password" id="list_pass" placeholder="Password (optional)">
+            <p class="note">*This cannot be changed later</p>
+            <button onclick="setup()">Save</button>
+        </div>
+        <div class="card" id="login">
+            <h2>Your List</h2>
+            <p>Password:</p>
+            <input type="password" id="list_pass" placeholder="Password">
+            <button onclick="login()">Enter</button>
+        </div>
+    </div>
+
     <script src="list.js" type="module"></script>
 
 
