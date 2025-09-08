@@ -26,7 +26,7 @@ function update_display() {
         return `
             <div class="list-item">
                 <input type="checkbox" id="item${index}" ${item.Completion ? 'checked' : ''} onchange="update_completion(${index}, this.checked)">
-                <input type="text" value="${item.label}" onchange="change_item(${index})" readonly>
+                <input type="text" ${item.label === "New task" ? `placeholder="New task" ` : `value="${item.label}"`} onchange="change_item(${index})" readonly>
                 <div class="item_settings">
                     <img class="delete" src="delete.png" onclick="delete_item(${index})">
                     <img class="edit" src="edit_icon.png" onclick="edit_item(${index})">
