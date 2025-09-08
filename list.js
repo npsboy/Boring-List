@@ -1,7 +1,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import {getFirestore, collection, doc, addDoc, deleteDoc, updateDoc, onSnapshot} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js"
+import {getFirestore, collection, doc, addDoc, deleteDoc, updateDoc, onSnapshot, getDoc} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 // Your web app's Firebase configuration
@@ -149,16 +149,36 @@ window.setup = async function() {
     toggle_setup();
 };
 
+window.login = async function() {
+    let login_pass = document.getElementById('login_pass').value;
+    if (!login_pass) {
+        alert("Please enter a password.");
+        return;
+    }
+    let docSnap = await getDoc(docRef);
+    let salt = docSnap.data().salt;
+    let hashed_pass = await hash(login_pass + salt);
+    if (hashed_pass === docSnap.data().pass) {
+        toggle_login();
+        onSnapshot(docRef, function (docSnap) {
+            list = docSnap.data().list
+            update_display();
+        })
+    } else {
+        alert("Incorrect password.");
+    }
+}
 
-function main() {
+async function main() {
     let params = new URLSearchParams(window.location.search)
     id = params.get("id")
     if (id) {
         docRef = doc(checklistCollection, id)
-        onSnapshot(docRef, function (docSnap) {
-        list = docSnap.data().list
-        update_display();
-    })
+        let docSnap = await getDoc(docRef);
+        let pass = docSnap.data().pass
+        if (pass != "") {
+            toggle_login();
+        }
     }
     else {
         toggle_setup();
