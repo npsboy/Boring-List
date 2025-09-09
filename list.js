@@ -76,6 +76,7 @@ window.add_task = function() {
 let checklistCollection = collection(db,"Checklists")
 let docRef;
 let id;
+let list_name;
 
 async function create_firestore_doc(name, pass, salt) {
     docRef = await addDoc(checklistCollection, {"name": name, "pass": pass, "salt": salt, "list": list})
@@ -115,15 +116,22 @@ function toggle_setup() {
     setup.style.display = (setup.style.display === 'block') ? 'none' : 'block';
 }
 
-function toggle_login() {
+async function toggle_login() {
     let darkener = document.querySelector('.darkener');
     let login = document.getElementById('login');
     darkener.style.display = (darkener.style.display === 'block') ? 'none' : 'block';
     login.style.display = (login.style.display === 'block') ? 'none' : 'block';
+    if (darkener.style.display === 'block' && docRef) {
+        let docSnap = await getDoc(docRef);
+        list_name = docSnap.data().name;
+        // Only update the login card's list name display
+        let loginListNameDisplay = document.querySelector('#login .list_name_display');
+        loginListNameDisplay.textContent = list_name;
+    }
 }
 
 window.setup = async function() {
-    let list_name = document.getElementById('list_name').value;
+    list_name = document.getElementById('list_name').value;
     let list_pass = document.getElementById('list_pass').value;
     if (!list_name) {
         alert("Please enter a list name.");
@@ -138,9 +146,12 @@ window.setup = async function() {
         create_firestore_doc(list_name, hashed_pass, salt);
     }
     toggle_setup();
+    let list_name_display = document.querySelector('.list_name_display');
+    list_name_display.textContent = list_name;
 };
 
 window.login = async function() {
+
     let login_pass = document.getElementById('login_pass').value;
     if (!login_pass) {
         alert("Please enter a password.");
@@ -150,11 +161,17 @@ window.login = async function() {
     let salt = docSnap.data().salt;
     let hashed_pass = await hash(login_pass + salt);
     if (hashed_pass === docSnap.data().pass) {
+        list_name = docSnap.data().name;
+        let list_name_displays = document.querySelectorAll('.list_name_display');
+        list_name_displays.forEach(display => {
+            display.textContent = list_name;
+        });
         toggle_login();
         onSnapshot(docRef, function (docSnap) {
             list = docSnap.data().list
             update_display();
         })
+
     } else {
         alert("Incorrect password.");
     }
@@ -171,6 +188,11 @@ async function main() {
             toggle_login();
         }
         else {
+            list_name = docSnap.data().name;
+            let list_name_displays = document.querySelectorAll('.list_name_display');
+            list_name_displays.forEach(display => {
+                display.textContent = list_name;
+            });
             onSnapshot(docRef, function (docSnap) {
                 list = docSnap.data().list
                 update_display();
