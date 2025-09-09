@@ -64,10 +64,10 @@ window.delete_item = function(index) {
 
 window.add_task = function() {
     let new_task = {label: "New task", Completion: false};
-    list.push(new_task);
+    list.unshift(new_task);
     update_display();
     update_firestore_doc();
-setTimeout(() => {
+    setTimeout(() => {
         edit_item(list.length - 1);
     }, 100);
 }
