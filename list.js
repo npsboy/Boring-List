@@ -19,6 +19,7 @@ const db = getFirestore(app);
 
 let listDisplay = document.getElementById('list');
 
+// format: [{label: "task", Completion: false}]
 let list = [];
 
 function update_display() {
@@ -27,10 +28,11 @@ function update_display() {
         return;
     }
     let list_html = list.map(function(item, index){
+        let escapedLabel = item.label.replace(/"/g, "&quot;");
         return `
             <div class="list-item">
                 <input type="checkbox" id="item${index}" ${item.Completion ? 'checked' : ''} onchange="update_completion(${index}, this.checked)">
-                <input type="text" ${item.label === "New task" ? `placeholder="New task" ` : `value="${item.label}"`} onchange="change_item(${index})">
+                <input type="text" ${item.label === "New task" ? `placeholder="New task" ` : `value="${escapedLabel}"`} onchange="change_item(${index})">
                 <div class="item_settings">
                     <img class="delete" src="delete.png" onclick="delete_item(${index})">
                 </div>
@@ -51,7 +53,7 @@ window.update_completion = function(index, isChecked) {
 window.change_item = function(index) {
     let display_item = document.getElementById(`item${index}`);
     let inputField = display_item.parentElement.querySelector('input[type="text"]');
-    list[index].label = inputField.value;
+    list[index].label = inputField.value.replace(/[<>]/g, "");
     update_display();
     update_firestore_doc();
 }
