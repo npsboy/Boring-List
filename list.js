@@ -30,10 +30,9 @@ function update_display() {
         return `
             <div class="list-item">
                 <input type="checkbox" id="item${index}" ${item.Completion ? 'checked' : ''} onchange="update_completion(${index}, this.checked)">
-                <input type="text" ${item.label === "New task" ? `placeholder="New task" ` : `value="${item.label}"`} onchange="change_item(${index})" readonly>
+                <input type="text" ${item.label === "New task" ? `placeholder="New task" ` : `value="${item.label}"`} onchange="change_item(${index})">
                 <div class="item_settings">
                     <img class="delete" src="delete.png" onclick="delete_item(${index})">
-                    <img class="edit" src="edit_icon.png" onclick="edit_item(${index})">
                 </div>
             </div>
         `;
@@ -48,18 +47,6 @@ window.update_completion = function(index, isChecked) {
     update_firestore_doc();
 }
 
-window.edit_item = function(index) {
-    let display_item = document.getElementById(`item${index}`);
-    let inputField = display_item.parentElement.querySelector('input[type="text"]');
-    inputField.focus();
-    inputField.removeAttribute('readonly');
-    setTimeout(() => {
-        inputField.addEventListener('blur', function handler() {
-            inputField.setAttribute('readonly', true);
-            inputField.removeEventListener('blur', handler);
-        });
-    }, 50)
-}
 
 window.change_item = function(index) {
     let display_item = document.getElementById(`item${index}`);
