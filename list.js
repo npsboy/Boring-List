@@ -32,7 +32,11 @@ function update_display() {
         return `
             <div class="list-item">
                 <input type="checkbox" id="item${index}" ${item.Completion ? 'checked' : ''} onchange="update_completion(${index}, this.checked)">
-                <input type="text" ${item.label === "New task" ? `placeholder="New task" ` : `value="${escapedLabel}"`} onchange="change_item(${index})">
+                <input type="text" ${item.label === "New task" ? 
+                    `placeholder="New task" ` : `value="${escapedLabel}"`} 
+                    onchange="change_item(${index})"
+                    style="${item.Completion ? 'text-decoration: line-through;' : ''}"
+                >
                 <div class="item_settings">
                     <img class="delete" src="delete.png" onclick="delete_item(${index})">
                 </div>
