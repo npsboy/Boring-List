@@ -170,6 +170,12 @@ async function main() {
         if (pass != "") {
             toggle_login();
         }
+        else {
+            onSnapshot(docRef, function (docSnap) {
+                list = docSnap.data().list
+                update_display();
+            })
+        }
     }
     else {
         toggle_setup();
