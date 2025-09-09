@@ -1,6 +1,6 @@
 .container {
-    width: 30vw;
-    min-width: 350px;
+    width: 80%;
+    max-width: 400px;
     height: 70vh;
     margin: 0 auto;
     padding: 20px;
@@ -30,7 +30,7 @@ h2 {
 }
 
 .list {
-    height: 250px;
+    height: 70%;
     overflow-y: auto;
 }
 
@@ -83,14 +83,12 @@ input[type="text"]:focus {
 button {
     padding: 10px 15px;
     height: 45px;
-    width: 130px;
+    width: 100%;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin: 0 auto;
-    margin-top: 70px;
 }
 
 button:hover {
