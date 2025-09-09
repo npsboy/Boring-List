@@ -22,6 +22,10 @@ let listDisplay = document.getElementById('list');
 let list = [];
 
 function update_display() {
+    if (list.length === 0) {
+        listDisplay.innerHTML = "<p>Add task to get started.</p>";
+        return;
+    }
     let list_html = list.map(function(item, index){
         return `
             <div class="list-item">
