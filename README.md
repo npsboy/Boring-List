@@ -2,7 +2,7 @@
 <img width="3328" height="463" alt="Boring_list_banner" src="https://github.com/user-attachments/assets/696ab203-0266-4a27-b68f-f9d15b649f27" />
 An ultra-simple, no-login to-do list for online collaboration.
 
-[See this working](npsnpsboy.github.io/Boring-List/boy.github.io/Boring-List/)
+[See this working](https://npsboy.github.io/Boring-List/)
 
 ## Features
 
@@ -16,9 +16,6 @@ An ultra-simple, no-login to-do list for online collaboration.
 
 ![Boring List Interface](https://github.com/user-attachments/assets/57be2be5-1f14-47f3-ac1a-6e9a2fc08bb3)
 
-*Clean, minimalist interface with a fun doodle background*
-
-
 ## How to use:
 - Create a list by opening the URL.
 - Set up the name and password(optional).
@@ -31,6 +28,3 @@ An ultra-simple, no-login to-do list for online collaboration.
 - **Data Storage**: All data is stored in Firebase Firestore with your own Firebase project
 - **Client-Side**: All password hashing and validation happens on the client-side
 - **No Analytics**: The application doesn't include any tracking or analytics
-
-
-**Made with ☕ and minimalism**
