@@ -25,6 +25,6 @@ An ultra-simple, no-login to-do list for online collaboration.
 ## Security & Privacy
 
 - **Password Security**: Passwords are hashed using SHA-256 with randomly generated salts
-- **Data Storage**: All data is stored in Firebase Firestore with your own Firebase project
+- **Data Storage**: All data is stored in Firebase Firestore.
 - **Client-Side**: All password hashing and validation happens on the client-side
 - **No Analytics**: The application doesn't include any tracking or analytics
