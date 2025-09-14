@@ -183,6 +183,41 @@ window.login = async function() {
     }
 }
 
+window.toggle_share = function() {
+    let darkener = document.querySelector('.darkener');
+    let share = document.getElementById('share');
+    darkener.style.display = (darkener.style.display === 'block') ? 'none' : 'block';
+    share.style.display = (share.style.display === 'block') ? 'none' : 'block';
+
+    function darkenerClickHandler(e) {
+        if (!share.contains(e.target)) {
+            darkener.style.display = 'none';
+            share.style.display = 'none';
+            darkener.removeEventListener('click', darkenerClickHandler);
+        }
+    }
+
+    darkener.addEventListener('click', darkenerClickHandler);
+}
+
+window.share = async function() {
+    toggle_share();
+    let share_link = document.getElementById('share_link');
+    share_link.value = window.location.href;
+}
+
+window.copyLink = function() {
+    let copy_status = document.getElementById('copy_status');
+    let share_link = document.getElementById('share_link');
+    share_link.select();
+    share_link.setSelectionRange(0, 99999); // For mobile devices
+    navigator.clipboard.writeText(share_link.value);
+    copy_status.textContent = "Link copied!";
+    setTimeout(() => {
+        copy_status.textContent = "";
+    }, 2000);
+}
+
 async function main() {
     let params = new URLSearchParams(window.location.search)
     id = params.get("id")

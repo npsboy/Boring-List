@@ -18,7 +18,16 @@
             <p>Add task to get started.</p>
         </div>
         <button id="addTaskButton" onclick="add_task()">Add Task</button>
-    </div>
+        <div class="list_footer">
+            <div class="footer_option" onclick="share()">
+                <span>Share</span>
+                <img src="share_icon.png"  class="footer_button">
+            </div>
+            <div class="footer_option">
+                <span>Settings</span>
+                <img src="settings_icon.png" class="footer_button">
+            </div>
+        </div>
 
     <div class="darkener">
         <div class="card" id="setup">
@@ -33,6 +42,13 @@
             <p>Password:</p>
             <input type="password" id="login_pass" placeholder="Password">
             <button onclick="login()">Enter</button>
+        </div>
+        <div class="card" id="share">
+            <h2 class="list_name_display"></h2>
+            <p>Share this link with others to let them view your list:</p>
+            <input type="text" id="share_link" readonly>
+            <button onclick="copyLink()">Copy Link</button>
+            <p id="copy_status"></p>
         </div>
     </div>
 

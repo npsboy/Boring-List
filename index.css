@@ -45,7 +45,7 @@ h2 {
 }
 
 .list {
-    height: 70%;
+    height: 63%;
     overflow-y: auto;
 }
 
@@ -209,4 +209,37 @@ hr {
     font-size: 24px;
     font-weight: bold;
     margin-left: 10px;
+}
+
+.footer_button{
+    height: 25px;
+    width: 25px;
+    margin-top: 20px;
+}
+
+.list_footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 50px;
+}
+
+.footer_option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.footer_option span {
+    margin-top: 15px;
+}
+
+#share {
+    display: none;
+}
+
+#share input[type="text"] {
+    width: 100%;
 }
