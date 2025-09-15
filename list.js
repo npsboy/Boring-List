@@ -271,6 +271,8 @@ window.settings = function() {
     else {
         password_instruction.innerHTML = "Setup Password:";
         new_password.style.display = "none";
+        let change_password_text = document.getElementById('change_password_text');
+        change_password_text.style.display = "none";
     }
 }
 

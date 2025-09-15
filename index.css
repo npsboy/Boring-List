@@ -273,3 +273,7 @@ hr {
     text-align: center;
     margin-top: 10px;
 }
+
+#change_password_text {
+    font-weight: bold;
+}
