@@ -218,6 +218,41 @@ window.copyLink = function() {
     }, 2000);
 }
 
+window.toggle_settings = function() {
+    let darkener = document.querySelector('.darkener');
+    let settings = document.getElementById('settings');
+    darkener.style.display = (darkener.style.display === 'block') ? 'none' : 'block';
+    settings.style.display = (settings.style.display === 'block') ? 'none' : 'block';
+
+    function darkenerClickHandler(e) {
+        if (!settings.contains(e.target)) {
+            darkener.style.display = 'none';
+            settings.style.display = 'none';
+            darkener.removeEventListener('click', darkenerClickHandler);
+        }
+    }
+
+    darkener.addEventListener('click', darkenerClickHandler);
+}
+
+window.settings = function() {
+    toggle_settings();
+    let list_name_input = document.getElementById('list_name_change');
+    let list_pass = document.getElementById('list_pass');
+    let password_instruction = document.getElementById('password_instruction');
+    list_name_input.value = list_name;
+
+    let new_password_input = document.getElementById('new_password_input');
+
+    if (list_pass && list_pass.value !== "") {
+        password_instruction.value = "Old Password:";
+    }
+    else {
+        password_instruction.innerHTML = "Setup Password:";
+        new_password_input.style.display = "none";
+    }
+}
+
 async function main() {
     let params = new URLSearchParams(window.location.search)
     id = params.get("id")

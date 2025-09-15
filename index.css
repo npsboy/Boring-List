@@ -155,7 +155,7 @@ hr {
     display: none;
 }
 
-#list_name {
+#list_name, #list_name_change {
     padding: 10px;
     border: none;
     border-bottom: 1px solid #ddd;
@@ -242,4 +242,10 @@ hr {
 
 #share input[type="text"] {
     width: 100%;
+}
+
+#settings{
+    min-height: 300px;
+    height: auto;
+    display: none;
 }

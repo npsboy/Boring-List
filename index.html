@@ -23,7 +23,7 @@
                 <span>Share</span>
                 <img src="share_icon.png"  class="footer_button">
             </div>
-            <div class="footer_option">
+            <div class="footer_option" onclick="settings()">
                 <span>Settings</span>
                 <img src="settings_icon.png" class="footer_button">
             </div>
@@ -49,6 +49,16 @@
             <input type="text" id="share_link" readonly>
             <button onclick="copyLink()">Copy Link</button>
             <p id="copy_status"></p>
+        </div>
+        <div class="card" id="settings">
+            <input type="text" id="list_name_change" placeholder="My List Name">
+            <p id="password_instruction">Setup Password:</p>
+            <input type="password" id="list_pass" placeholder="Password (optional)">
+            <div class="new_password">
+                <p id="new_password_input">New Password:</p>
+                <input type="password" id="new_list_pass" placeholder="New Password">
+            </div>
+            <button onclick="save_settings()">Save</button>
         </div>
     </div>
 
