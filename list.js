@@ -369,6 +369,7 @@ async function main() {
             });
             onSnapshot(docRef, function (docSnap) {
                 list = docSnap.data().list
+                list_name = docSnap.data().name;
                 update_display();
             })
         }
