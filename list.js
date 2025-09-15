@@ -43,6 +43,10 @@ function update_display() {
         `;
     });
     listDisplay.innerHTML = list_html.join('');
+    let list_name_display = document.querySelectorAll('.list_name_display');
+    list_name_display.forEach(display => {
+        display.textContent = list_name;
+    });
 }
 
 
@@ -88,6 +92,7 @@ async function create_firestore_doc(name, pass, salt) {
     docRef = await addDoc(checklistCollection, {"name": name, "pass": pass, "salt": salt, "list": list})
     onSnapshot(docRef, function (docSnap) {
         list = docSnap.data().list
+        list_name = docSnap.data().name;
         update_display();
     })
     let url = new URL(window.location)
@@ -183,6 +188,7 @@ window.login = async function() {
         toggle_login();
         onSnapshot(docRef, function (docSnap) {
             list = docSnap.data().list
+            list_name = docSnap.data().name;
             update_display();
         })
 
