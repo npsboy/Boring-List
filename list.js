@@ -1,4 +1,3 @@
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import {getFirestore, collection, doc, addDoc, deleteDoc, updateDoc, onSnapshot, getDoc} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js"
@@ -83,6 +82,7 @@ let checklistCollection = collection(db,"Checklists")
 let docRef;
 let id;
 let list_name;
+let hashedPassword = ""; // Global variable to store current hashed password
 
 async function create_firestore_doc(name, pass, salt) {
     docRef = await addDoc(checklistCollection, {"name": name, "pass": pass, "salt": salt, "list": list})
@@ -137,19 +137,24 @@ async function toggle_login() {
 }
 
 window.setup = async function() {
-    list_name = document.getElementById('list_name').value;
-    let list_pass = document.getElementById('list_pass').value;
+    let list_name_input = document.getElementById('list_name');
+    let password_input = document.getElementById('list_pass');
+    
+    list_name = list_name_input.value;
+    let password_value = password_input.value;
+    
     if (!list_name) {
         alert("Please enter a list name.");
         return;
     }
-    if (!list_pass) {
+    if (!password_value) {
+        hashedPassword = "";
         create_firestore_doc(list_name, "", "");
     }
     else{
         let salt = generateSalt();
-        let hashed_pass = await hash(list_pass + salt);
-        create_firestore_doc(list_name, hashed_pass, salt);
+        hashedPassword = await hash(password_value + salt);
+        create_firestore_doc(list_name, hashedPassword, salt);
     }
     toggle_setup();
     let list_name_display = document.querySelector('.list_name_display');
@@ -157,16 +162,19 @@ window.setup = async function() {
 };
 
 window.login = async function() {
-
-    let login_pass = document.getElementById('login_pass').value;
-    if (!login_pass) {
+    let password_input = document.getElementById('login_pass');
+    let password_value = password_input.value;
+    
+    if (!password_value) {
         alert("Please enter a password.");
         return;
     }
     let docSnap = await getDoc(docRef);
     let salt = docSnap.data().salt;
-    let hashed_pass = await hash(login_pass + salt);
-    if (hashed_pass === docSnap.data().pass) {
+    let inputHashedPassword = await hash(password_value + salt);
+    
+    if (inputHashedPassword === docSnap.data().pass) {
+        hashedPassword = inputHashedPassword; // Store the hashed password globally
         list_name = docSnap.data().name;
         let list_name_displays = document.querySelectorAll('.list_name_display');
         list_name_displays.forEach(display => {
@@ -179,7 +187,7 @@ window.login = async function() {
         })
 
     } else {
-        alert("Incorrect password.");
+        alert("Incorrect password. Please try again.");
     }
 }
 
@@ -237,20 +245,83 @@ window.toggle_settings = function() {
 
 window.settings = function() {
     toggle_settings();
-    let list_name_input = document.getElementById('list_name_change');
-    let list_pass = document.getElementById('list_pass');
+    let list_name_change_input = document.getElementById('list_name_change');
     let password_instruction = document.getElementById('password_instruction');
-    list_name_input.value = list_name;
+    let new_password = document.getElementById('new_password');
+    
+    list_name_change_input.value = list_name;
 
-    let new_password_input = document.getElementById('new_password_input');
-
-    if (list_pass && list_pass.value !== "") {
-        password_instruction.value = "Old Password:";
+    if (hashedPassword !== "") {
+        password_instruction.textContent = "Old Password:";
     }
     else {
         password_instruction.innerHTML = "Setup Password:";
-        new_password_input.style.display = "none";
+        new_password.style.display = "none";
     }
+}
+
+window.save_settings = async function() {
+    let list_name_change_input = document.getElementById('list_name_change');
+    let old_password_input = document.getElementById('old_password_input');
+    let new_password_input = document.getElementById('new_list_pass');
+    
+    let new_list_name = list_name_change_input.value;
+    let old_password_value = old_password_input.value;
+    let new_password_value = new_password_input.value;
+
+    let salt;
+
+    let list_name_display = document.querySelectorAll('.list_name_display');
+    list_name_display.forEach(display => {
+        display.textContent = new_list_name;
+    });
+
+    if (!new_list_name) {
+        alert("Please enter a list name.");
+        return;
+    }
+    if (!old_password_value || old_password_value.trim() === "") {
+        list_name = new_list_name;
+        await updateDoc(docRef, {
+            name: new_list_name,
+        });
+        toggle_settings();
+        return;
+    }
+    if (hashedPassword !== "") {
+        // if there already is a password
+        salt = (await getDoc(docRef)).data().salt;
+        let old_password_input_hash = await hash(old_password_value + salt);
+        if (old_password_input_hash !== hashedPassword) {
+            alert("Incorrect old password.");
+            return;
+        }
+        if (new_password_value && new_password_value.trim() !== "") {
+            salt = generateSalt();
+            hashedPassword = await hash(new_password_value + salt);
+        }
+        else {
+            alert("Please enter a new password.");
+            return;
+        }
+    }
+    else {
+        // If no password is set, ie: first time setup
+        new_password_value = old_password_value; // For setting password first time
+        if (!new_password_value || new_password_value.trim() === "") {
+            alert("Please enter a password.");
+            return;
+        }
+        salt = generateSalt();
+        hashedPassword = await hash(new_password_value + salt);
+    }
+    list_name = new_list_name;
+    await updateDoc(docRef, {
+        name: new_list_name,
+        pass: hashedPassword,
+        salt: salt
+    });
+    toggle_settings();
 }
 
 async function main() {
@@ -259,11 +330,12 @@ async function main() {
     if (id) {
         docRef = doc(checklistCollection, id)
         let docSnap = await getDoc(docRef);
-        let pass = docSnap.data().pass
-        if (pass != "") {
+        let storedPassword = docSnap.data().pass
+        if (storedPassword != "") {
             toggle_login();
         }
         else {
+            hashedPassword = ""; // No password set
             list_name = docSnap.data().name;
             let list_name_displays = document.querySelectorAll('.list_name_display');
             list_name_displays.forEach(display => {
