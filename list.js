@@ -100,6 +100,14 @@ async function create_firestore_doc(name, pass, salt) {
     window.history.pushState({}, "", url)
 }
 
+window.clearurl = function() {
+    let url = new URL(window.location)
+    url.searchParams.delete("id")
+    window.history.pushState({}, "", url)
+    window.location.reload();
+}
+
+
 async function update_firestore_doc() {
     await updateDoc(docRef, {list})
 }
@@ -330,12 +338,24 @@ window.save_settings = async function() {
     toggle_settings();
 }
 
+window.toggle_error = function() {
+    let darkener = document.querySelector('.darkener');
+    let error = document.getElementById('error');
+    darkener.style.display = 'block';
+    error.style.display = 'flex';
+}
+
 async function main() {
     let params = new URLSearchParams(window.location.search)
     id = params.get("id")
     if (id) {
         docRef = doc(checklistCollection, id)
         let docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+            toggle_error();
+            console.log("Document not found");
+            return;
+        }
         let storedPassword = docSnap.data().pass
         if (storedPassword != "") {
             toggle_login();
