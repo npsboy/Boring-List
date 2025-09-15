@@ -37,7 +37,7 @@ function update_display() {
                     style="${item.Completion ? 'text-decoration: line-through;' : ''}"
                 >
                 <div class="item_settings">
-                    <img class="delete" src="delete.png" onclick="delete_item(${index})">
+                    <img class="delete" src="images/delete.png" onclick="delete_item(${index})">
                 </div>
             </div>
         `;
