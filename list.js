@@ -199,8 +199,22 @@ function start_listening() {
     });
 }
 
+const LAST_LIST_KEY = "boring-list:last-id";
+
+function get_last_id() {
+    try { return localStorage.getItem(LAST_LIST_KEY); } catch (e) { return null; }
+}
+
+function set_last_id(value) {
+    try {
+        if (value) localStorage.setItem(LAST_LIST_KEY, value);
+        else localStorage.removeItem(LAST_LIST_KEY);
+    } catch (e) {}
+}
+
 function unlock() {
     unlocked = true;
+    set_last_id(id);
     update_display();
     save_local();
     sync();
@@ -287,6 +301,7 @@ function create_list(name, pass, salt) {
 }
 
 window.clearurl = function() {
+    set_last_id(null);
     let url = new URL(window.location)
     url.searchParams.delete("id")
     window.history.pushState({}, "", url)
@@ -528,6 +543,15 @@ async function main() {
 
     let params = new URLSearchParams(window.location.search)
     id = params.get("id")
+    if (!id) {
+        // Reopen the list that was last worked on.
+        id = get_last_id();
+        if (id) {
+            let url = new URL(window.location)
+            url.searchParams.set("id", id)
+            window.history.replaceState({}, "", url)
+        }
+    }
     if (!id) {
         toggle_setup();
         init_backend(); // warm up
