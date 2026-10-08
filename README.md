@@ -2,7 +2,7 @@
 <img width="3328" height="463" alt="Boring_list_banner" src="https://github.com/user-attachments/assets/696ab203-0266-4a27-b68f-f9d15b649f27" />
 An ultra-simple, no-login to-do list for online collaboration.
 
-[See this working](https://npsboy.github.io/Boring-List/)
+[See this working](https://boringlist.npsboy.net)
 
 ## Features
 
