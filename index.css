@@ -24,6 +24,38 @@ h2 {
     margin-left: 20px;
 }
 
+#sync_status {
+    margin: 0 0 5px 20px;
+    font-size: 13px;
+    color: #888;
+}
+
+#sync_status:empty {
+    display: none;
+}
+
+#sync_status::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+#sync_status.online {
+    color: #4CAF50;
+}
+
+#sync_status.saving {
+    color: #e0a800;
+}
+
+#sync_status.offline {
+    color: #d9534f;
+}
+
 .header {
     background-color: #4CAF50;
     color: white;

@@ -1,0 +1,29 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Lists are fetched by id only (share link). No querying the collection,
+    // so nobody can enumerate other people's lists.
+    match /Checklists/{listId} {
+      allow get: if true;
+      allow list: if false;
+      allow create, update: if isValidChecklist(request.resource.data);
+      allow delete: if false;
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidChecklist(data) {
+      return data.keys().hasOnly(['name', 'pass', 'salt', 'list'])
+        && data.keys().hasAll(['name', 'pass', 'salt', 'list'])
+        && data.name is string && data.name.size() > 0 && data.name.size() <= 200
+        && data.pass is string && (data.pass.size() == 0 || data.pass.size() == 64)
+        && data.salt is string && (data.salt.size() == 0 || data.salt.size() == 32)
+        && data.list is list && data.list.size() <= 1000;
+    }
+  }
+}
